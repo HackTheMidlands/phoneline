@@ -1,0 +1,12 @@
+# python
+__pycache__
+.venv/
+
+# configs
+config.yaml
+credentials/*.json
+
+# terraform deployment
+dist/
+.terraform/
+terraform.tfstate*
