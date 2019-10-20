@@ -31,8 +31,8 @@ First, create `config.yaml` to point to your target phone numbers.
 
 ```yaml
 numbers:
-  - 0XXXXXXXXXX
-  - 0XXXXXXXXXX
+  name: +XXXXXXXXXXXX
+  name: +XXXXXXXXXXXX
 ```
 
 Then, create `credentials/gcloud.json` to be the credentials of a Google
