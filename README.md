@@ -2,6 +2,9 @@
 
 This is a phoneline program to forward calls to organizers.
 
+The number can be either called or texted and it will passed along to the
+appropriate organizers.
+
 ## Development
 
 After cloning the repository, install the dependencies into a virtual

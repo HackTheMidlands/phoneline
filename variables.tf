@@ -5,7 +5,3 @@ variable "region" {
 variable "zone" {
   default = "europe-west2-a"
 }
-
-variable "func" {
-  default = "voice"
-}

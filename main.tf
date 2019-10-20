@@ -26,6 +26,10 @@ data "archive_file" "app_zip" {
     filename = "requirements.txt"
     content = "${file("${path.root}/requirements.txt")}"
   }
+  source {
+    filename = "twilio.json"
+    content = "${file("${path.root}/credentials/twilio.json")}"
+  }
 }
 
 resource "random_id" "bucket" {
@@ -46,13 +50,24 @@ resource "random_id" "app_function" {
   byte_length = 8
 }
 
-resource "google_cloudfunctions_function" "app" {
-  name                  = "call-router-${random_id.app_function.hex}"
+resource "google_cloudfunctions_function" "voice" {
+  name                  = "voice-router-${random_id.app_function.hex}"
   available_memory_mb   = 256
   source_archive_bucket = "${google_storage_bucket_object.app_zip.bucket}"
   source_archive_object = "${google_storage_bucket_object.app_zip.output_name}"
   timeout               = 60
-  entry_point           = "${var.func}"
+  entry_point           = "voice"
+  trigger_http          = true
+  runtime               = "python37"
+}
+
+resource "google_cloudfunctions_function" "sms" {
+  name                  = "sms-router-${random_id.app_function.hex}"
+  available_memory_mb   = 256
+  source_archive_bucket = "${google_storage_bucket_object.app_zip.bucket}"
+  source_archive_object = "${google_storage_bucket_object.app_zip.output_name}"
+  timeout               = 60
+  entry_point           = "sms"
   trigger_http          = true
   runtime               = "python37"
 }
@@ -65,8 +80,13 @@ resource "twilio_phone_number" "helpline" {
   address_sid = "${jsondecode(file("credentials/twilio.json"))["address_sid"]}"
 
   voice {
-    primary_url = "${google_cloudfunctions_function.app.https_trigger_url}"
-    primary_http_method = "GET"
+    primary_url = "${google_cloudfunctions_function.voice.https_trigger_url}"
+    primary_http_method = "POST"
+  }
+
+  sms {
+    primary_url = "${google_cloudfunctions_function.sms.https_trigger_url}"
+    primary_http_method = "POST"
   }
 }
 
