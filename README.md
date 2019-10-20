@@ -21,7 +21,8 @@ You should be able to see the generated conversation on
 ## Deployment
 
 This repository contains a terraform script to deploy and manage the
-phoneline using Google Cloud and Twilio.
+phoneline using Google Cloud and Twilio (using
+[terraform-provider-twilio](https://github.com/Preskton/terraform-provider-twilio))
 
 First, create `config.yaml` to point to your target phone numbers.
 
